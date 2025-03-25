@@ -1,0 +1,18 @@
+[
+  {
+    "question": "What is 2 + 2?",
+    "answer": 4
+  },
+  {
+    "question": "Calculate 5.5 + 3.2",
+    "answer": 8.7
+  },
+  {
+    "question": "What is 10 * 1.5?",
+    "answer": 15
+  },
+  {
+    "question": "Subtract 3.3 from 10",
+    "answer": 6.7
+  }
+]

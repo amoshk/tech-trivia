@@ -1,0 +1,162 @@
+/* Base Styling */
+body {
+  font-family: 'Press Start 2P', cursive;
+  background: linear-gradient(135deg, #141e30, #243b55);
+  color: #eee;
+  margin: 50px;
+  padding: 0;
+}
+
+.container {
+  max-width: 800px;
+  padding: 20px;
+}
+
+h1, h2, h3 {
+  text-align: center;
+  text-shadow: 2px 2px 4px #000;
+}
+
+#isHost {
+  width: auto;
+}
+
+#customQuestions {
+  width: 100%;
+}
+
+input, button {
+  padding: 10px;
+  font-size: 1rem;
+  margin: 5px 0;
+  border: none;
+  border-radius: 5px;
+}
+
+input {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+button {
+  background-color: #ff6f61;
+  color: #fff;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: #ff3b2d;
+}
+
+/* Game-specific styling */
+.hidden {
+  display: none;
+}
+
+#gameControls button {
+  margin-right: 10px;
+  margin-bottom: 10px;
+}
+
+/* Host players flex-grid styling */
+#playersList {
+  margin-top: 20px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+}
+
+#playersList ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  list-style: none;
+  padding: 0;
+}
+
+#playersList li {
+  background: rgba(255, 255, 255, 0.1);
+  padding: 5px 10px;
+  border-radius: 3px;
+}
+
+/* Messages styling */
+#messages p {
+  background: rgba(255, 255, 255, 0.1);
+  padding: 10px;
+  margin: 10px 0;
+  border-radius: 4px;
+  text-shadow: 1px 1px 2px #000;
+}
+
+/* Leaderboard Styling */
+#leaderboardSection {
+  margin-top: 30px;
+  background: rgba(0, 0, 0, 0.7);
+  padding: 20px;
+  border-radius: 10px;
+  text-align: center;
+}
+
+#leaderboardSection h2 {
+  font-size: 1.5rem;
+  margin-bottom: 15px;
+}
+
+#leaderboardSection ol {
+  list-style: none;
+  padding: 0;
+}
+
+#leaderboardSection li {
+  font-size: 1.2rem;
+  margin: 10px 0;
+  color: #ffeb3b;
+}
+
+/* Winner Banner Styling */
+#winnerBanner {
+  background: #e3e4d9;
+  color: #f1cf09;
+  padding: 20px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+  text-shadow: 2px 2px 3px #000;
+}
+
+/* Waiting screen styling */
+#waitingScreen {
+  margin-top: 10px;
+  font-size: 1rem;
+  text-align: center;
+  color: #ffeb3b;
+}
+
+/* Player score styling */
+#playerScore {
+  text-align: center;
+  margin-top: 20px;
+  font-size: 1.2rem;
+}
+
+/* Mobile Responsive */
+@media (max-width: 600px) {
+  .container {
+    padding: 10px;
+    max-width: 100%;
+  }
+  input, button {
+    font-size: 0.9rem;
+  }
+  h1 {
+    font-size: 1.8rem;
+  }
+  #leaderboardSection li {
+    font-size: 1rem;
+  }
+}
+
+/* Custom font from Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');

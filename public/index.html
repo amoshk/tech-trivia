@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>2025 March TECH Townhall Trivia</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div id="loginSection">
+      <h1>2025 March TECH Townhall Trivia</h1>
+      <div>
+        <label for="playerName">Player Name:</label>
+        <input type="text" id="playerName" />
+      </div>
+      <div>
+        <input type="checkbox" id="isHost" />
+        <label for="isHost">Join as Host</label>
+      </div>
+      <div id="customQuestionsContainer" style="display:none;">
+        <label for="customQuestions">Custom Questions JSON:</label>
+        <textarea id="customQuestions" rows="4" cols="50" placeholder='[{"question": "Q1", "answer": "10"}, {"question": "Q2", "answer": "20"}]'></textarea>
+      </div>
+      <button id="joinBtn">Join Game</button>
+    </div>
+    <div id="gameSection" class="hidden">
+      <h1>2025 March TECH Townhall Trivia</h1>
+      <div id="messages"></div>
+      <div id="questionArea">
+        <p id="questionText"></p>
+      </div>
+      <div id="answerArea">
+        <input type="text" id="answerInput" />
+        <button id="submitAnswerBtn">Submit Answer</button>
+      </div>
+      <div id="waitingScreen" class="hidden">
+        <p>Waiting for next question...</p>
+      </div>
+      <div id="gameControls" class="hidden">
+        <button id="startGameBtn">Start Game</button>
+        <button id="nextQuestionBtn">Next Question</button>
+        <button id="evaluateRoundBtn">Evaluate Round</button>
+      </div>
+      <div id="playersList">
+        <h2>Players</h2>
+        <ul id="playersUl"></ul>
+      </div>
+      <div id="playerScore" class="hidden"></div>
+      <div id="leaderboardSection" class="hidden"></div>
+    </div>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="client.js"></script>
+  </body>
+</html>
