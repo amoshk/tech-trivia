@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <title>2025 March TECH Townhall Trivia</title>
     <link rel="stylesheet" href="style.css" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   </head>
   <body>
     <div id="loginSection">
@@ -24,10 +25,10 @@
     </div>
     <div id="gameSection" class="hidden">
       <h1>2025 March TECH Townhall Trivia</h1>
-      <div id="messages"></div>
       <div id="questionArea">
         <p id="questionText"></p>
       </div>
+      <div id="messages"></div>
       <div id="answerArea">
         <input type="text" id="answerInput" />
         <button id="submitAnswerBtn">Submit Answer</button>
@@ -40,12 +41,13 @@
         <button id="nextQuestionBtn">Next Question</button>
         <button id="evaluateRoundBtn">Evaluate Round</button>
       </div>
+      <div id="playerScore" class="hidden"></div>
+      <canvas id="answersChart" style="max-height:300px; display:none; background-color: rgb(255, 255, 255);"></canvas>
+      <div id="leaderboardSection" class="hidden"></div>
       <div id="playersList">
         <h2>Players</h2>
         <ul id="playersUl"></ul>
       </div>
-      <div id="playerScore" class="hidden"></div>
-      <div id="leaderboardSection" class="hidden"></div>
     </div>
     <script src="/socket.io/socket.io.js"></script>
     <script src="client.js"></script>

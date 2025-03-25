@@ -31,6 +31,10 @@ function getNonHostPlayers() {
   return filtered;
 }
 
+function getLeaderBoard(){
+  return Object.values(getNonHostPlayers()).sort((a, b) => b.score - a.score);
+}
+
 const app = express();
 const server = http.createServer(app);
 const io = socketIo(server);
@@ -100,7 +104,7 @@ io.on('connection', (socket) => {
     if (currentQuestionIndex >= questions.length) {
       io.emit('message', 'No more questions. End of game.');
       // Compute leaderboard sorted by score descending
-      const leaderboard = Object.values(getNonHostPlayers()).sort((a, b) => b.score - a.score);
+      const leaderboard = getLeaderBoard();
       // Determine winner(s) based on highest score
       let winners = [];
       if (leaderboard.length > 0) {
@@ -117,7 +121,7 @@ io.on('connection', (socket) => {
       index: currentQuestionIndex + 1,
       total: questions.length
     });
-    io.emit('message', `Question ${currentQuestionIndex + 1}: ${currentQuestion.question}`);
+    //io.emit('message', `Question ${currentQuestionIndex + 1}: ${currentQuestion.question}`);
   });
 
   // When a player submits an answer
@@ -195,13 +199,15 @@ io.on('connection', (socket) => {
     // Truncate lists for host display (max 5 entries each)
     const displayNonExceeding = nonExceeding.slice(0, 5).map(entry => ({ name: entry.name, answer: entry.answer }));
     const displayExceeding = exceeding.slice(0, 5).map(entry => ({ name: entry.name, answer: entry.answer }));
-  
+    const leaderboared = getLeaderBoard();    
+    
     io.emit('roundResult', { 
       correctAnswer, 
       winners: roundWinners, 
       awardedPoints: pointsMap,
       nonExceeding: displayNonExceeding,
       exceeding: displayExceeding,
+      leaderboard: leaderboared,
       submittedAnswers
     });
     io.emit('playersUpdate', getNonHostPlayers());

@@ -1,3 +1,7 @@
+// Global flag for host status and chart instance
+let isHost = false;
+let answersChart = null;
+
 const socket = io();
 
 const loginSection = document.getElementById('loginSection');
@@ -8,6 +12,7 @@ const isHostCheckbox = document.getElementById('isHost');
 const startGameBtn = document.getElementById('startGameBtn');
 const nextQuestionBtn = document.getElementById('nextQuestionBtn');
 const evaluateRoundBtn = document.getElementById('evaluateRoundBtn');
+const questionArea = document.getElementById('questionArea');
 const questionText = document.getElementById('questionText');
 const answerInput = document.getElementById('answerInput');
 const submitAnswerBtn = document.getElementById('submitAnswerBtn');
@@ -19,6 +24,7 @@ const gameControlsDiv = document.getElementById('gameControls');
 const leaderboardSection = document.getElementById('leaderboardSection');
 const answerArea = document.getElementById('answerArea');
 const playerScoreDiv = document.getElementById('playerScore');
+const answersChartEl = document.getElementById('answersChart');
 
 // Toggle custom questions textarea visibility based on host selection
 isHostCheckbox.addEventListener('change', () => {
@@ -40,7 +46,7 @@ function addMessage(msg) {
 
 // Join button event listener
 joinBtn.addEventListener('click', () => {
-  const isHost = isHostCheckbox.checked;
+  isHost = isHostCheckbox.checked;
   if (!isHost && playerNameInput.value.trim() === '') {
     alert('Please enter a name.');
     return;
@@ -137,38 +143,98 @@ socket.on('newQuestion', (data) => {
     waitingScreen.classList.add('hidden');
     answerInput.disabled = false;
     submitAnswerBtn.disabled = false;
+  } else {
+    leaderboardSection.classList.add('hidden');
+    startGameBtn.classList.add('hidden')
+    answersChartEl.style.display = 'none';
   }
 });
 
 socket.on('roundResult', (data) => {
   addMessage(`Correct Answer: ${data.correctAnswer}`);
-  if (data.winner) {
-    addMessage(`Round Winner: ${data.winner}`);
+  if (data.winners && data.winners.length > 0) {
+    const winnersStr = data.winners.join(', ');
+    addMessage(`Round Winner(s): ${winnersStr}`);
   } else {
-    addMessage('No valid answer this round.');
+    addMessage('No winner of this round.');
+  }
+  // Display leaderboard
+  if(isHost){
+    leaderboardSection.innerHTML = createLeaderBoardHtml(data.leaderboard);
+    leaderboardSection.classList.remove('hidden');
+
+    // Show the chart canvas element
+    answersChartEl.style.display = 'block';
+    // Extract labels and data from submitted answers
+    // Using Object.values to get the { name, answer } entries
+    const submissions = Object.values(data.submittedAnswers);
+    const labels = submissions.map(entry => entry.name);
+    const dataPoints = submissions.map(entry => entry.answer);
+
+    // If a chart already exists, destroy it before creating a new one
+    if (answersChart) {
+      answersChart.destroy();
+    }
+
+    const ctx = answersChartEl.getContext('2d');
+    answersChart = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: labels,
+        datasets: [{
+          label: 'Player Answers',
+          data: dataPoints,
+          borderWidth: 10,
+          borderColor: 'rgba(75, 192, 192, 1)',
+          backgroundColor: 'rgb(248, 248, 248)',
+          fill: false,
+          tension: 0.1
+        }]
+      },
+      options: {
+        scales: {
+          y: {
+            beginAtZero: true,
+            ticks: {
+              font: {
+                  size: 32,
+              }
+            }
+          }
+        },
+      }
+    });
   }
 });
 
 // Display leaderboard and winner banner only on host screen after game ends
 socket.on('gameEnded', (data) => {
   if (isHost) {
+    answersChartEl.style.display = 'none';
+    questionArea.style.display = 'none';
+    messagesDiv.innerHTML = '';
     // Prepare leaderboard HTML
-    let leaderboardHTML = '<h2>Leaderboard</h2><ol>';
-    if (data.leaderboard && Array.isArray(data.leaderboard)) {
-      data.leaderboard.forEach(player => {
-        leaderboardHTML += `<li>${player.name} - Score: ${player.score}</li>`;
-      });
-    }
-    leaderboardHTML += '</ol>';
+    let leaderboardHTML = createLeaderBoardHtml(data.leaderboard);
     // Create winner banner if a winner exists
     let winnerBannerHTML = '';
-    if (data.winner) {
+    if (data.winners && data.winners.length > 0)  {
       winnerBannerHTML = `<div id="winnerBanner">
-  <h2>You're winner!</h2>
-  <p>Congratulations ${data.winner}, everyone sends their congratulations!</p>
-</div>`;
+        <img src="winner.jpg" />
+        <p>Congratulations ${data.winners.join(', ')}, everyone sends their congratulations!</p>
+      </div>`;
     }
     leaderboardSection.innerHTML = winnerBannerHTML + leaderboardHTML;
     leaderboardSection.classList.remove('hidden');
   }
 });
+
+function createLeaderBoardHtml(leaderboard){
+  let leaderboardHTML = '<h2>Leaderboard</h2><ol>';
+  if (leaderboard && Array.isArray(leaderboard)) {
+    leaderboard.forEach(player => {
+      leaderboardHTML += `<li>${player.name} - Score: ${player.score}</li>`;
+    });
+  }
+  leaderboardHTML += '</ol>';
+  return leaderboardHTML;
+}
