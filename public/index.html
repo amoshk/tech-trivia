@@ -9,13 +9,17 @@
   <body>
     <div id="loginSection">
       <h1>2025 March TECH Townhall Trivia</h1>
+      <div id="gameInstruction">
+        <p>Thanks for joining the TECH Marh 2025 Townhall, we are about to start the <strong>NUMBER</strong> trivia game about our TECH teams. </p>
+        <p>You will need to guess that answer which cloest BUT not exceeding the correct answer will get the respective points!</p>
+      </div>
       <div>
         <label for="playerName">Player Name:</label>
         <input type="text" id="playerName" />
       </div>
       <div>
         <input type="checkbox" id="isHost" />
-        <label for="isHost">Join as Host</label>
+        <label for="isHost">Join as Host (Select this only if you are host to the game)</label>
       </div>
       <div id="customQuestionsContainer" style="display:none;">
         <label for="customQuestions">Custom Questions JSON:</label>
@@ -28,6 +32,8 @@
       <div id="questionArea">
         <p id="questionText"></p>
       </div>
+      <!-- Countdown timer display -->
+      <div id="timerDisplay" class="hidden">Time Left: 12 seconds</div>
       <div id="messages"></div>
       <div id="answerArea">
         <input type="text" id="answerInput" />

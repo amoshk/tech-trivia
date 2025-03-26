@@ -15,7 +15,7 @@ try {
 }
 
 // Game state
-let players = {}; // { socketId: { name, score, isHost } }
+let players = {}; // { socketId: { name, score, isHost, submitted } }
 let currentQuestionIndex = -1;
 let currentQuestion = null;
 let submittedAnswers = {}; // { socketId: { answer, name } }
@@ -72,7 +72,8 @@ io.on('connection', (socket) => {
       players[socket.id] = {
         name: data.name,
         score: 0,
-        isHost: false
+        isHost: false,
+        submitted: false
       };
     }
     // Emit playersUpdate filtered to exclude host(s)
@@ -114,6 +115,7 @@ io.on('connection', (socket) => {
       io.emit('gameEnded', { leaderboard, winners });
       return;
     }
+
     currentQuestion = questions[currentQuestionIndex];
     submittedAnswers = {}; // reset answers for round
     io.emit('newQuestion', { 
@@ -121,6 +123,16 @@ io.on('connection', (socket) => {
       index: currentQuestionIndex + 1,
       total: questions.length
     });
+
+    // Reset submission state for all non-host players
+    Object.keys(players).forEach(pid => {
+      if (!players[pid].isHost) {
+        players[pid].submitted = false;
+      }
+    });
+
+    io.emit('playersUpdate', getNonHostPlayers());
+
     //io.emit('message', `Question ${currentQuestionIndex + 1}: ${currentQuestion.question}`);
   });
 
@@ -134,7 +146,12 @@ io.on('connection', (socket) => {
       answer,
       name: players[socket.id] ? players[socket.id].name : 'Unknown'
     };
+    // Mark the player as having submitted their answer
+    if (players[socket.id]) {
+      players[socket.id].submitted = true;
+    }
     socket.emit('message', `Your answer of ${answer} is submitted.`);
+    io.emit('playersUpdate', getNonHostPlayers());
   });
 
   // Host triggers round evaluation

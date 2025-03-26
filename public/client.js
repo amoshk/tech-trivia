@@ -1,6 +1,8 @@
 // Global flag for host status and chart instance
 let isHost = false;
 let answersChart = null;
+let countdownValue = 30;
+let countdownInterval = null;
 
 const socket = io();
 
@@ -25,6 +27,8 @@ const leaderboardSection = document.getElementById('leaderboardSection');
 const answerArea = document.getElementById('answerArea');
 const playerScoreDiv = document.getElementById('playerScore');
 const answersChartEl = document.getElementById('answersChart');
+const gameInstruction = document.getElementById('gameInstruction'); 
+const timerDisplay = document.getElementById('timerDisplay');
 
 // Toggle custom questions textarea visibility based on host selection
 isHostCheckbox.addEventListener('change', () => {
@@ -36,6 +40,21 @@ isHostCheckbox.addEventListener('change', () => {
     playerNameInput.disabled = false;
   }
 });
+
+// Countdown timer function that resets with every new question
+function startCountdown() {
+  clearInterval(countdownInterval);
+  countdownValue = 12;
+  timerDisplay.textContent = `Time Left: ${countdownValue} seconds`;
+  countdownInterval = setInterval(() => {
+    countdownValue--;
+    timerDisplay.textContent = `Time Left: ${countdownValue} seconds`;
+    if (countdownValue <= 0) {
+      clearInterval(countdownInterval);
+      // Optionally: inform the server or notify the user that time is up
+    }
+  }, 1000);
+}
 
 // Helper to append messages
 function addMessage(msg) {
@@ -63,6 +82,7 @@ joinBtn.addEventListener('click', () => {
   socket.emit('join', joinData);
   loginSection.classList.add('hidden');
   gameSection.classList.remove('hidden');
+  gameInstruction.classList.add('hidden');
 
   // Hide host answer input if user is host, otherwise hide players list
   if (isHost) {
@@ -127,7 +147,9 @@ socket.on('playersUpdate', (players) => {
     playersUl.innerHTML = '';
     Object.values(players).forEach((player) => {
       const li = document.createElement('li');
-      li.textContent = `${player.name}`;
+      // Append tick mark if player has submitted answer
+      const tickMark = player.submitted ? ' ✔' : '';
+      li.textContent = `${player.name}${tickMark}`;
       playersUl.appendChild(li);
     });
   }
@@ -135,6 +157,10 @@ socket.on('playersUpdate', (players) => {
 
 // Additional event listeners for game events can be added below
 socket.on('newQuestion', (data) => {
+  timerDisplay.classList.remove('hidden');
+  nextQuestionBtn.disabled = true;
+  evaluateRoundBtn.disabled = false;
+  startCountdown();
   questionText.textContent = `Q${data.index}/${data.total}: ${data.question}`;
   messagesDiv.innerHTML = '';
   // Reset answer area for new question (only for non-hosts)
@@ -151,6 +177,9 @@ socket.on('newQuestion', (data) => {
 });
 
 socket.on('roundResult', (data) => {
+  timerDisplay.classList.add('hidden');
+  nextQuestionBtn.disabled = false;
+  evaluateRoundBtn.disabled = true;
   addMessage(`Correct Answer: ${data.correctAnswer}`);
   if (data.winners && data.winners.length > 0) {
     const winnersStr = data.winners.join(', ');
@@ -212,6 +241,7 @@ socket.on('gameEnded', (data) => {
   if (isHost) {
     answersChartEl.style.display = 'none';
     questionArea.style.display = 'none';
+    timerDisplay.classList.add('hidden');
     messagesDiv.innerHTML = '';
     // Prepare leaderboard HTML
     let leaderboardHTML = createLeaderBoardHtml(data.leaderboard);
@@ -225,6 +255,7 @@ socket.on('gameEnded', (data) => {
     }
     leaderboardSection.innerHTML = winnerBannerHTML + leaderboardHTML;
     leaderboardSection.classList.remove('hidden');
+    playersList.classList.add('hidden');
   }
 });
 
