@@ -1,10 +1,11 @@
 /* Base Styling */
 body {
-  font-family: 'Press Start 2P', cursive;
+  font-family: 'Rubik', sans-serif;
   background: linear-gradient(135deg, #141e30, #243b55);
   color: #eee;
   margin: 50px;
   padding: 0;
+  height: 100%;
 }
 
 .container {
@@ -25,6 +26,13 @@ h1, h2, h3 {
   width: 100%;
 }
 
+#gameSection{
+  position: relative;
+  -webkit-transform: translateY(50%);
+  -ms-transform: translateY(50%);
+  transform: translateY(50%);
+}
+
 input, button {
   padding: 10px;
   font-size: 1rem;
@@ -36,6 +44,7 @@ input, button {
 input {
   width: 100%;
   box-sizing: border-box;
+  font-size: 2rem;
 }
 
 button {
@@ -43,6 +52,7 @@ button {
   color: #fff;
   cursor: pointer;
   transition: background-color 0.3s ease;
+  font-size: 1.5rem;
 }
 
 button:hover {
@@ -84,7 +94,7 @@ button:hover {
 
 /* Messages styling */
 #questionText{
-  font-size: 2.5rem;
+  font-size: 3rem;
   text-align: center;
 }
 #messages p {
@@ -93,7 +103,7 @@ button:hover {
   margin: 10px 0;
   border-radius: 4px;
   text-shadow: 1px 1px 2px #000;
-  font-size: 2.5rem;
+  font-size: 3rem;
 }
 
 /* Leaderboard Styling */
@@ -106,7 +116,7 @@ button:hover {
 }
 
 #leaderboardSection h2 {
-  font-size: 1.5rem;
+  font-size: 2rem;
   margin-bottom: 15px;
 }
 
@@ -118,7 +128,7 @@ button:hover {
 #gameInstruction {
   text-align: center;
   background-color: #5d5b5b;
-  font-size: 1.5rem;
+  font-size: 2rem;
 }
 
 #leaderboardSection li {
@@ -135,13 +145,13 @@ button:hover {
   border-radius: 10px;
   margin-bottom: 20px;
   text-shadow: 2px 2px 3px #000;
-  font-size: 2rem;
+  font-size: 3rem;
 }
 
 /* Waiting screen styling */
 #waitingScreen {
   margin-top: 10px;
-  font-size: 1rem;
+  font-size: 2rem;
   text-align: center;
   color: #ffeb3b;
 }
