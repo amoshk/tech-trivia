@@ -26,12 +26,6 @@ h1, h2, h3 {
   width: 100%;
 }
 
-#gameSection{
-  position: relative;
-  -webkit-transform: translateY(50%);
-  -ms-transform: translateY(50%);
-  transform: translateY(50%);
-}
 
 input, button {
   padding: 10px;
@@ -164,16 +158,39 @@ button:hover {
 }
 
 /* Mobile Responsive */
-@media (max-width: 600px) {
+@media (max-width: 1000px) {
+
+  #gameSection{
+    position: relative;
+    -webkit-transform: translateY(50%);
+    -ms-transform: translateY(50%);
+    transform: translateY(50%);
+  }
+
+  #gameInstruction {
+    font-size: 3rem;
+  }
+
+  #waitingScreen {
+    font-size: 3rem;
+  }
+
+  #playerScore {
+    font-size: 1.2rem;
+  }
+
   .container {
     padding: 10px;
     max-width: 100%;
   }
   input, button {
-    font-size: 0.9rem;
+    font-size: 5rem;
   }
   h1 {
-    font-size: 1.8rem;
+    font-size: 3rem;
+  }
+  label {
+    font-size: 2rem;
   }
   #leaderboardSection li {
     font-size: 1rem;
